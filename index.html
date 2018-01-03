@@ -1,0 +1,84 @@
+<html>
+
+<head>
+  <title>Tic Tac Toe</title>
+  <script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+  <script
+  src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+  crossorigin="anonymous"></script>
+  <script src='script.js'></script>
+  <link rel='stylesheet' type='text/css' href='style.css'>
+</head>
+<body>
+  <h1>Tic Tac Toe</h1>
+  <h4 id='welcome'>Pick a field to start</h2>
+  <div class='messages'></div>
+  <div class='turn'></div>
+  <table>
+    <tr>
+      <td class='item1'></td>
+      <td class='item2'></td>
+      <td class='item3'></td>
+    </tr>
+    <tr>
+      <td class='item4'></td>
+      <td class='item5'></td>
+      <td class='item6'></td>
+    </tr>
+    <tr>
+      <td class='item7'></td>
+      <td class='item8'></td>
+      <td class='item9'></td>
+    </tr>
+  </table>
+  <h2>Current Game Stats:</h2>
+  <div id='gameStats'>
+    <div class='statDesc'><strong>Your average </strong> time between moves: 
+      <div id='playerSpeed' class='stat'></div>
+    </div>
+    <div class='statDesc'>Number of moves by <strong>you</strong>: 
+      <div id='playerMoves' class='stat'>0</div>
+    </div>
+    <div class='statDesc'>Number of moves by <strong>machine</strong>: 
+      <div id='machineMoves' class='stat'>0</div>
+    </div>
+  </div>
+  <div id='timeElapsedBox'>
+    <div id='timeElapsedText'>
+      Time elapsed:
+    </div>
+    <div id='timeElapsed'>
+    </div>
+  </div>
+  <br>
+  <input style='margin-bottom:20px;' class='startNewBtn' type='button' value='Start New Game' />
+  <br>
+  <input style='margin-bottom:20px;' class='championShipsBtn' type='button' value='View Championship Stats' />
+  <div id='championshipStats'>
+    <table>
+      <tr>
+        <th class='champHeader'>Player</th>
+        <th class='champHeader'>Won</th>
+        <th class='champHeader'>Lost</th>
+        <th class='champHeader'>Draw</th>
+      </tr>
+      <tr>
+        <td class='champData'>You</td>
+        <td id='userWon' class='champData'>0</td>
+        <td id='userLost' class='champData'>0</td>
+        <td id='userDraw' class='champData'>0</td>
+      </tr>
+      <tr>
+        <td class='champData'>Machine</td>
+        <td id='machineWon' class='champData'>0</td>
+        <td id='machineLost' class='champData'>0</td>
+        <td id='machineDraw' class='champData'>0</td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
