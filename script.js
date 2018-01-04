@@ -4,11 +4,11 @@
 /********************************************/
 
 $(function() {
-  // TO-DO: for the championship data. store here all game-specific data here
   // TO-DO: detect draw
-  // TO-DO: block user action on board after game finished
-  var machineData = new Array()
-  var userData = new Array()
+  var userWon = new Array()
+  var userLost = new Array()
+  var machineWon = new Array()
+  var machineLost = new Array()
 
   var table = $('table')
   var tickingSeconds
@@ -76,6 +76,10 @@ $(function() {
       if (checkHasEnded(table, pattern) == true) {
         $('.turn').html('')
         messages.html('You have lost!<br><br>Start a new game by clicking on the button at the bottom.')
+        machineWon.push('yes')
+        userLost.push('yes')
+        $('#userLost').html(userLost.length)
+        $('#machineWon').html(machineWon.length)
         clearInterval(tickingSeconds)
       }
     }
@@ -95,6 +99,10 @@ $(function() {
       if (checkHasEnded(table, pattern) == true) {
         turn.html('')
         messages.html('You have have won!<br><br>Start a new game by clicking on the button at the bottom.')
+        machineLost.push('yes')
+        userWon.push('yes')
+        $('#userWon').html(userWon.length)
+        $('#machineLost').html(machineLost.length)
         clearInterval(tickingSeconds)
       } else {
         turn.html("It's your turn.")
