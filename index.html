@@ -10,7 +10,6 @@
   src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
   integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
   crossorigin="anonymous"></script>
-  <script src='script.js'></script>
   <link rel='stylesheet' type='text/css' href='style.css'>
 </head>
 <body>
@@ -37,25 +36,14 @@
   </table>
   <h2>Current Game Stats:</h2>
   <div id='gameStats'>
-    <div class='statDesc'><strong>Your average </strong> time between moves: 
-      <div id='playerSpeed' class='stat'></div>
-    </div>
-    <div class='statDesc'>Number of moves by <strong>you</strong>: 
+    <div class='statDesc'>Number of moves by <strong>Machine 1</strong>: 
       <div id='playerMoves' class='stat'>0</div>
     </div>
-    <div class='statDesc'>Number of moves by <strong>machine</strong>: 
+    <div class='statDesc'>Number of moves by <strong>Machine 2</strong>: 
       <div id='machineMoves' class='stat'>0</div>
     </div>
-  </div>
-  <div id='timeElapsedBox'>
-    <div id='timeElapsedText'>
-      Time elapsed:
-    </div>
-    <div id='timeElapsed'>
-    </div>
-  </div>
   <br>
-  <input style='margin-bottom:20px;' class='startNewBtn' type='button' value='Start New Game' />
+  <input style='margin-bottom:20px;' id='startNewBtn' type='button' value='Run New Game' />
   <br>
   <input style='margin-bottom:20px;' class='championShipsBtn' type='button' value='View Championship Stats' />
   <div id='championshipStats'>
@@ -81,4 +69,5 @@
     </table>
   </div>
 </body>
+  <script src='script.js'></script>
 </html>

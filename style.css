@@ -41,7 +41,6 @@ h1 {
 
 #timeElapsedBox {
   width:160px;
-  margin:0px auto;
 }
 
 #timeElapsedText {
@@ -58,7 +57,7 @@ h1 {
   text-align:left;
   border: 1px solid black;
   width:350px;
-  height:115px;
+  height:80px;
   margin: 15px auto;
 }
 
@@ -108,7 +107,7 @@ td.circle:before {
   text-transform: uppercase;
 }
 
-.startNewBtn {
+#startNewBtn {
   width:100%;
   background: #555;
   margin-top:30px;
@@ -120,7 +119,8 @@ td.circle:before {
   text-transform: uppercase;
 }
 
-.startNewBtn:hover {
+
+#startNewBtn:hover {
   opacity: 0.8;
 }
 
@@ -128,3 +128,6 @@ td.circle:before {
   opacity: 0.8;
 }
 
+input {
+  font-size:1.1em;
+}

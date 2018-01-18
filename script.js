@@ -1,163 +1,166 @@
-/********************************************/
-/* @author : Pauline Ghiazza                */
-/* @author site : www.paulineghiazza.fr     */
-/********************************************/
-
 $(function() {
-  // TO-DO: detect draw
-  var userWon = new Array()
-  var userLost = new Array()
-  var machineWon = new Array()
-  var machineLost = new Array()
+  var Machine = function(type) {
+    this.type = type
+  }
 
-  var table = $('table')
-  var tickingSeconds
-  var messages = $('.messages')
-  var turn = $('.turn')
-  var moveCounter = 0
-  // timer is not started until user clicks on table
-  var timerStarted = false
-  // seconds elapsed since beginning of round
-  var secondsElapsed = 0
-
-  $('td').click(function() {
-    moveCounter++
-    var currentGameStatsUpdate = function() {
-      var avg = secondsElapsed/moveCounter
-      // rounded to whole number
-      $('#playerSpeed').html(Math.round(avg)+'s')
-      $('#playerMoves').html(moveCounter)
-      $('#machineMoves').html(moveCounter)
-
-    }
-    var startTimer = function() {
-      if (timerStarted == false) {
-        tickingSeconds = setInterval(drawTime, 1000)
-        function drawTime() {
-          secondsElapsed += 1
-          $('#timeElapsed').html(secondsElapsed+'s')
-        }
-        timerStarted = true
-      } else {
-        // timer has started
-        return; 
-      }
-    }
-    var checked = function(td) {
-      if(td.hasClass('cross') || td.hasClass('circle')) {
+  var Table = function() {
+    this.state = {
+      // free, cross or circle
+      fieldOne : 'free', 
+      fieldTwo : 'free', 
+      fieldThree : 'free', 
+      fieldFour : 'free', 
+      fieldFive : 'free', 
+      fieldSix : 'free', 
+      fieldSeven : 'free', 
+      fieldEight : 'free', 
+      fieldNine : 'free'
+    },
+    // which machine is starting?
+    this.turn = 'Machine1',
+    this.checkRow1 = (type) => {
+      if (this.state.fieldOne == type && this.state.fieldTwo == type && this.state.fieldThree == type) {
         return true
-      } else {
+      }
+    },
+    this.checkRow2 = (type) => {
+      if (this.state.fieldFour == type && this.state.fieldFive == type && this.state.fieldSix == type) {
+        return true
+      }
+    },
+    this.checkRow3 = (type) => {
+      if (this.state.fieldSeven == type && this.state.fieldEight == type && this.state.fieldNine == type) {
+        return true
+      }
+    },
+    this.checkColumn1 = (type) => {
+      if (this.state.fieldOne == type && this.state.fieldFour == type && this.state.fieldEight == type) {
+        return true
+      }
+    },
+    this.checkColumn2 = (type) => {
+      if (this.state.fieldTwo == type && this.state.fieldFive == type && this.state.fieldNine == type) {
+        return true
+      }
+    },
+    this.checkColumn3 = (type) => {
+      if (this.state.fieldThree == type && this.state.fieldSix == type && this.state.fieldNine == type) {
+        return true
+      }
+    },
+    this.checkDiagonalFromTopLeft = (type) => {
+      if (this.state.fieldOne == type && this.state.fieldFive == type && this.state.fieldNine == type) {
+        return true
+      }
+    },
+    this.checkDiagonalFromTopRight = (type) => {
+      if (this.state.fieldThree == type && this.state.fieldFive == type && this.state.fieldNine == type) {
+        return true
+      }
+    },
+    this.hasWon = (machine) => {
+      if (this.checkRow1(machine.type) == true) {
+        return true
+      }
+      if (this.checkRow2(machine.type) == true) {
+        return true
+      }
+      if (this.checkRow3(machine.type) == true) {
+        return true
+      }
+      if (this.checkColumn1(machine.type) == true) {
+        return true
+      }
+      if (this.checkColumn2(machine.type) == true) {
+        return true
+      }
+      if (this.checkColumn3(machine.type) == true) {
+        return true
+      }
+      if (this.checkDiagonalFromTopLeft(machine.type) == true) {
+        return true
+      }
+      if (this.checkDiagonalFromTopRight(machine.type) == true) {
+        return true
+      }
+      return false
+    },
+    // input 'number' must be random number
+    // @number: integer
+    // @machine: Machine
+    this.fill = (field, machine) => {
+      for (var key in this.state) {
+        if (this.state[key] == 'free') {
+          this.state.field = machine.type
+          $('.item'+field).addClass(machine.type)
+          return true
+        }
         return false
       }
+    },
+    this.resetState = () => {
+      this.state.fieldOne = 'free'
+      this.state.fieldTwo = 'free'
+      this.state.fieldThree = 'free'
+      this.state.fieldFour = 'free'
+      this.state.fieldFive = 'free'
+      this.state.fieldSix = 'free'
+      this.state.fieldSeven = 'free'
+      this.state.fieldEight = 'free'
+      this.state.fieldNine = 'free'
     }
-
-    // MACHINE LOGIC
-    var machineTurn = function() {
-      var checked = function(td) {
-        if (td.hasClass('cross') || td.hasClass('circle')) {
-          return true
-        } else {
-          return false
-        }
-      }
-      var randomItem
-      for (var i=0;i<100;i++) {
-        // generates whole number between 1 and 9
-        var randomNumber = Math.floor(Math.random() * 9) + 1
-        var gotRandomItem = $('.item'+randomNumber)
-        var isChecked = checked(gotRandomItem)
-        if (!isChecked) {
-          randomItem = gotRandomItem
-          break
-        }
-      }
-      var pattern = 'circle';
-      changeState(randomItem, pattern);
-      if (checkHasEnded(table, pattern) == true) {
-        $('.turn').html('')
-        messages.html('You have lost!<br><br>Start a new game by clicking on the button at the bottom.')
-        machineWon.push('yes')
-        userLost.push('yes')
-        $('#userLost').html(userLost.length)
-        $('#machineWon').html(machineWon.length)
-        clearInterval(tickingSeconds)
-      }
-    }
-
-    //misc functions
-    $('#welcome').hide()
-    startTimer()
-    currentGameStatsUpdate()
-
-    td = $(this);
-    var checked = checked(td);
-    if (checked) {
-      messages.html('This box has already been checked. Please click into another (unchecked) box.')
-    } else {
-      var pattern = 'cross';
-      changeState(td, pattern);
-      if (checkHasEnded(table, pattern) == true) {
-        turn.html('')
-        messages.html('You have have won!<br><br>Start a new game by clicking on the button at the bottom.')
-        machineLost.push('yes')
-        userWon.push('yes')
-        $('#userWon').html(userWon.length)
-        $('#machineLost').html(machineLost.length)
-        clearInterval(tickingSeconds)
-      } else {
-        turn.html("It's your turn.")
-        machineTurn()
-      }
-    }
-    $('.startNewBtn').click(function() {
-      messages.html('')
-      startNew(table)
-      function startNew(table) {
-        // reset data
-        table.find('td').each(function() {
-          $(this).removeClass('circle').removeClass('cross');
-        });
-        $('#playerSpeed').html(0)
-        $('#playerMoves').html(0)
-        $('#machineMoves').html(0)
-
-        moveCounter = 0
-        secondsElapsed = 0
-        timerStarted = false
-        $('#timeElapsed').html(0)
-      }
-    })
-  })
+  }
   
   $('.championShipsBtn').click(function() {
     $('#championshipStats').toggle({effect:'fade'})
     document.location.href = '#championshipStats'
   })
+  
+  let Machine1 = new Machine('cross'),
+      Machine2 = new Machine('circle'),
+      Board = new Table(),
+      randomNumber = () => {
+        return Math.floor(Math.random() * 10)
+      },
+      fields = ['fieldOne', 'fieldTwo', 'fieldThree', 'fieldFour', 'fieldFive', 'fieldSix', 'fieldSeven', 'fieldEight', 'fieldNine']
+      winner = undefined,
+      gameRunning = false
+
+  // take 1 sec between turns
+  // in the fill method, show on frontend
+  $('#startNewBtn').click(function() {
+    // activate game loop
+    gameRunning = true
+    while (gameRunning) {
+      if (Board.turn == 'Machine1') {
+        while (Board.fill(fields[randomNumber()], Machine1) == false) {
+          filled = Board.fill(fields[randomNumber()], Machine1)
+        }
+        // check if any combination has happened
+        if (Board.hasWon(Machine1.type)) {
+          winner = 'Machine 1'
+          gameRunning = false
+          break
+        }
+        // pass turn to other
+        Board.turn = Machine2
+      }
+      if (Board.turn == 'Machine2') {
+        console.log('asd')
+        while (Board.fill(fields[randomNumber()], Machine1) == false) {
+          filled = Board.fill(fields[randomNumber()], Machine1)
+        }
+        // check if any combination has happened
+        if (Board.hasWon(Machine2.type)) {
+          winner = 'Machine 2'
+          gameRunning = false
+          break
+        }
+        // pass turn to other
+        Board.turn = Machine1
+      }
+    }
+    console.log(winner)
+  })
 })
-
-function changeState(td, pattern) {
-  return td.addClass(pattern);
-}
-
-// check different rows/columns/diagonals
-function checkHasEnded(table, pattern) {
-  if(table.find('.item1').hasClass(pattern) && table.find('.item2').hasClass(pattern) && table.find('.item3').hasClass(pattern)) {
-    return true
-  } else if (table.find('.item1').hasClass(pattern) && table.find('.item4').hasClass(pattern) && table.find('.item7').hasClass(pattern)) {
-    return true
-  } else if (table.find('.item1').hasClass(pattern) && table.find('.item5').hasClass(pattern) && table.find('.item9').hasClass(pattern)) {
-    return true
-  } else if (table.find('.item4').hasClass(pattern) && table.find('.item5').hasClass(pattern) && table.find('.item6').hasClass(pattern)) {
-    return true
-  } else if (table.find('.item7').hasClass(pattern) && table.find('.item8').hasClass(pattern) && table.find('.item9').hasClass(pattern)) {
-    return true 
-  } else if (table.find('.item2').hasClass(pattern) && table.find('.item5').hasClass(pattern) && table.find('.item8').hasClass(pattern)) {
-    return true 
-  } else if (table.find('.item3').hasClass(pattern) && table.find('.item6').hasClass(pattern) && table.find('.item9').hasClass(pattern)) {
-    return true
-  } else if (table.find('.item3').hasClass(pattern) && table.find('.item5').hasClass(pattern) && table.find('.item7').hasClass(pattern)) {
-    return true
-  }
-  return false
-}
 

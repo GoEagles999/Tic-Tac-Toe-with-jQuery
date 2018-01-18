@@ -1,0 +1,94 @@
+/********************************************/
+/* @author : Pauline Ghiazza                */
+/* @author site : www.paulineghiazza.fr     */
+/********************************************/
+
+$(function() {
+  var table = function() {
+    this.state = {
+      field1 : 'free', 
+      field1 : 'free', 
+      field1 : 'free', 
+      field1 : 'free', 
+      field1 : 'free', 
+      field1 : 'free', 
+      field1 : 'free', 
+      field1 : 'free', 
+      field1 : 'free', 
+    }
+  }
+  
+  var machine1 = function() {
+    this.fillField = (random) => {
+      let isChecked = (field) => {
+        if (td.hasClass('cross') || td.hasClass('circle')) {
+          return true
+        } else {
+          return false
+        }
+      }
+      let checked = isChecked(random)
+      checked ? return 'occupied' : random.addClass('cross')
+    }
+  }
+
+
+  var machine2 = function() {
+    this.fillField = (random) => {
+      let isChecked = (field) => {
+        if (td.hasClass('cross') || td.hasClass('circle')) {
+          return true
+        } else {
+          return false
+        }
+      }
+      let checked = isChecked(random)
+      checked ? return 'occupied' : random.addClass('circle')
+    }
+  }
+
+  var messages = $('.messages')
+  
+        messages.html('You have have won!<br><br>Start a new game by clicking on the button at the bottom.')
+        messages.html('')
+    
+      $('.startNewBtn').click(function() {
+      function startNew(table) {
+        table.find('td').each(function() {
+          $(this).removeClass('circle').removeClass('cross');
+        });
+        $('#playerSpeed').html(0)
+        $('#playerMoves').html(0)
+        $('#machineMoves').html(0)
+
+        $('#timeElapsed').html(0)
+  
+  $('.championShipsBtn').click(function() {
+    $('#championshipStats').toggle({effect:'fade'})
+    document.location.href = '#championshipStats'
+  })
+})
+
+
+var checkCombinations = (type) => {
+  var table = $('table')
+  if(table.find('.item1').hasClass(type) && table.find('.item2').hasClass(type) && table.find('.item3').hasClass(type)) {
+    return true
+  } else if (table.find('.item1').hasClass(type) && table.find('.item4').hasClass(type) && table.find('.item7').hasClass(type)) {
+    return true
+  } else if (table.find('.item1').hasClass(type) && table.find('.item5').hasClass(type) && table.find('.item9').hasClass(type)) {
+    return true
+  } else if (table.find('.item4').hasClass(type) && table.find('.item5').hasClass(type) && table.find('.item6').hasClass(type)) {
+    return true
+  } else if (table.find('.item7').hasClass(type) && table.find('.item8').hasClass(type) && table.find('.item9').hasClass(type)) {
+    return true 
+  } else if (table.find('.item2').hasClass(type) && table.find('.item5').hasClass(type) && table.find('.item8').hasClass(type)) {
+    return true 
+  } else if (table.find('.item3').hasClass(type) && table.find('.item6').hasClass(type) && table.find('.item9').hasClass(type)) {
+    return true
+  } else if (table.find('.item3').hasClass(type) && table.find('.item5').hasClass(type) && table.find('.item7').hasClass(type)) {
+    return true
+  }
+  return false
+}
+
