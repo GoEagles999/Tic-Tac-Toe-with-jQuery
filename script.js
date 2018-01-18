@@ -18,63 +18,81 @@ $(function() {
     },
     // which machine is starting?
     this.turn = 'Machine1',
-    this.checkRow1 = (type) => {
+
+    // broken down by different ways of winning to make it easier to optimize performance
+    this.checkRowOne = (type) => {
       if (this.state.fieldOne == type && this.state.fieldTwo == type && this.state.fieldThree == type) {
         return true
+      } else {
+        return false
       }
     },
-    this.checkRow2 = (type) => {
+    this.checkRowTwo = (type) => {
       if (this.state.fieldFour == type && this.state.fieldFive == type && this.state.fieldSix == type) {
         return true
+      } else {
+        return false
       }
     },
-    this.checkRow3 = (type) => {
+    this.checkRowThree = (type) => {
       if (this.state.fieldSeven == type && this.state.fieldEight == type && this.state.fieldNine == type) {
         return true
+      } else {
+        return false
       }
     },
-    this.checkColumn1 = (type) => {
+    this.checkColumnOne = (type) => {
       if (this.state.fieldOne == type && this.state.fieldFour == type && this.state.fieldEight == type) {
         return true
+      } else {
+        return false
       }
     },
-    this.checkColumn2 = (type) => {
+    this.checkColumnTwo = (type) => {
       if (this.state.fieldTwo == type && this.state.fieldFive == type && this.state.fieldNine == type) {
         return true
+      } else {
+        return false
       }
     },
-    this.checkColumn3 = (type) => {
+    this.checkColumnThree = (type) => {
       if (this.state.fieldThree == type && this.state.fieldSix == type && this.state.fieldNine == type) {
         return true
+      } else {
+        return false
       }
     },
     this.checkDiagonalFromTopLeft = (type) => {
       if (this.state.fieldOne == type && this.state.fieldFive == type && this.state.fieldNine == type) {
         return true
+      } else {
+        return false
       }
     },
     this.checkDiagonalFromTopRight = (type) => {
       if (this.state.fieldThree == type && this.state.fieldFive == type && this.state.fieldNine == type) {
         return true
+      } else {
+        return false
       }
     },
     this.hasWon = (machine) => {
-      if (this.checkRow1(machine.type) == true) {
+      if (this.checkRowOne(machine.type) == true) {
         return true
       }
-      if (this.checkRow2(machine.type) == true) {
+      if (this.checkRowTwo(machine.type) == true) {
         return true
       }
-      if (this.checkRow3(machine.type) == true) {
+      if (this.checkRowThree(machine.type) == true) {
         return true
       }
-      if (this.checkColumn1(machine.type) == true) {
+      if (this.checkColumnOne(machine.type) == true) {
         return true
       }
-      if (this.checkColumn2(machine.type) == true) {
+      if (this.checkColumnTwo(machine.type) == true) {
         return true
       }
-      if (this.checkColumn3(machine.type) == true) {
+      if (this.checkColumnThree(machine.type) == true) {
         return true
       }
       if (this.checkDiagonalFromTopLeft(machine.type) == true) {
@@ -86,16 +104,17 @@ $(function() {
       return false
     },
     // input 'number' must be random number
-    // @number: integer
-    // @machine: Machine
-    this.fill = (field, machine) => {
-      for (var key in this.state) {
-        if (this.state[key] == 'free') {
-          this.state.field = machine.type
-          $('.item'+field).addClass(machine.type)
-          return true
-        }
+    // @randomNumber: integer between 0 and 9
+    // @machine: Machine object
+    this.fill = (randomNumber, machine) => {
+      const fields = ['fieldOne', 'fieldTwo', 'fieldThree', 'fieldFour', 'fieldFive', 'fieldSix', 'fieldSeven', 'fieldEight', 'fieldNine']
+      let toFill = fields[randomNumber]
+      if (this.state[toFill] != 'free') {
         return false
+      } else {
+        this.state[toFill] = machine.type
+        $('.item'+randomNumber).addClass(machine.type)
+        return true
       }
     },
     this.resetState = () => {
@@ -122,45 +141,52 @@ $(function() {
       randomNumber = () => {
         return Math.floor(Math.random() * 10)
       },
-      fields = ['fieldOne', 'fieldTwo', 'fieldThree', 'fieldFour', 'fieldFive', 'fieldSix', 'fieldSeven', 'fieldEight', 'fieldNine']
       winner = undefined,
-      gameRunning = false
+      filled = undefined,
+      gameRunning = true,
+      rounds = 0
 
   // take 1 sec between turns
   // in the fill method, show on frontend
   $('#startNewBtn').click(function() {
-    // activate game loop
-    gameRunning = true
     while (gameRunning) {
+      if (rounds == 9) {
+        gameRunning = false
+        console.log(Board.state)
+      }
       if (Board.turn == 'Machine1') {
-        while (Board.fill(fields[randomNumber()], Machine1) == false) {
-          filled = Board.fill(fields[randomNumber()], Machine1)
-        }
+        do {
+          filled = Board.fill(randomNumber(), Machine1)
+        } while (filled != true)
         // check if any combination has happened
         if (Board.hasWon(Machine1.type)) {
           winner = 'Machine 1'
-          gameRunning = false
+          console.log(winner)
           break
         }
-        // pass turn to other
-        Board.turn = Machine2
-      }
-      if (Board.turn == 'Machine2') {
-        console.log('asd')
-        while (Board.fill(fields[randomNumber()], Machine1) == false) {
-          filled = Board.fill(fields[randomNumber()], Machine1)
+        rounds++
+        // pass turn to other machine
+        Board.turn = 'Machine2'
+      } else {
+        while (Board.fill(randomNumber(), Machine2)) {
+          // couldnt fill, try again
+          filled = Board.fill(randomNumber(), Machine2)
+          if (filled) {
+            break
+          }
         }
         // check if any combination has happened
         if (Board.hasWon(Machine2.type)) {
           winner = 'Machine 2'
-          gameRunning = false
+          console.log(winner)
           break
         }
-        // pass turn to other
-        Board.turn = Machine1
+        rounds++
+        // pass turn to other machine
+        Board.turn = 'Machine1'
       }
     }
-    console.log(winner)
+    console.log('asd')
   })
 })
 
