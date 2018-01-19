@@ -1,192 +1,303 @@
+/********************************************/
+/* @author : Pauline Ghiazza                */
+/* @author site : www.paulineghiazza.fr     */
+/********************************************/
+
+// todo:
+// fix alignment of vertical and diagonal cross lines: due to previous design choice (:before css selector) this takes time
+// championships data is not functioning correctly: only stores up to 2 rounds
+// update game moves real time (hence the sleep function)
+
 $(function() {
-  var Machine = function(type) {
-    this.type = type
-  }
 
-  var Table = function() {
-    this.state = {
-      // free, cross or circle
-      fieldOne : 'free', 
-      fieldTwo : 'free', 
-      fieldThree : 'free', 
-      fieldFour : 'free', 
-      fieldFive : 'free', 
-      fieldSix : 'free', 
-      fieldSeven : 'free', 
-      fieldEight : 'free', 
-      fieldNine : 'free'
-    },
-    // which machine is starting?
-    this.turn = 'Machine1',
-
-    // broken down by different ways of winning to make it easier to optimize performance
-    this.checkRowOne = (type) => {
-      if (this.state.fieldOne == type && this.state.fieldTwo == type && this.state.fieldThree == type) {
-        return true
-      } else {
-        return false
-      }
-    },
-    this.checkRowTwo = (type) => {
-      if (this.state.fieldFour == type && this.state.fieldFive == type && this.state.fieldSix == type) {
-        return true
-      } else {
-        return false
-      }
-    },
-    this.checkRowThree = (type) => {
-      if (this.state.fieldSeven == type && this.state.fieldEight == type && this.state.fieldNine == type) {
-        return true
-      } else {
-        return false
-      }
-    },
-    this.checkColumnOne = (type) => {
-      if (this.state.fieldOne == type && this.state.fieldFour == type && this.state.fieldEight == type) {
-        return true
-      } else {
-        return false
-      }
-    },
-    this.checkColumnTwo = (type) => {
-      if (this.state.fieldTwo == type && this.state.fieldFive == type && this.state.fieldNine == type) {
-        return true
-      } else {
-        return false
-      }
-    },
-    this.checkColumnThree = (type) => {
-      if (this.state.fieldThree == type && this.state.fieldSix == type && this.state.fieldNine == type) {
-        return true
-      } else {
-        return false
-      }
-    },
-    this.checkDiagonalFromTopLeft = (type) => {
-      if (this.state.fieldOne == type && this.state.fieldFive == type && this.state.fieldNine == type) {
-        return true
-      } else {
-        return false
-      }
-    },
-    this.checkDiagonalFromTopRight = (type) => {
-      if (this.state.fieldThree == type && this.state.fieldFive == type && this.state.fieldNine == type) {
-        return true
-      } else {
-        return false
-      }
-    },
-    this.hasWon = (machine) => {
-      if (this.checkRowOne(machine.type) == true) {
-        return true
-      }
-      if (this.checkRowTwo(machine.type) == true) {
-        return true
-      }
-      if (this.checkRowThree(machine.type) == true) {
-        return true
-      }
-      if (this.checkColumnOne(machine.type) == true) {
-        return true
-      }
-      if (this.checkColumnTwo(machine.type) == true) {
-        return true
-      }
-      if (this.checkColumnThree(machine.type) == true) {
-        return true
-      }
-      if (this.checkDiagonalFromTopLeft(machine.type) == true) {
-        return true
-      }
-      if (this.checkDiagonalFromTopRight(machine.type) == true) {
-        return true
-      }
-      return false
-    },
-    // input 'number' must be random number
-    // @randomNumber: integer between 0 and 9
-    // @machine: Machine object
-    this.fill = (randomNumber, machine) => {
-      const fields = ['fieldOne', 'fieldTwo', 'fieldThree', 'fieldFour', 'fieldFive', 'fieldSix', 'fieldSeven', 'fieldEight', 'fieldNine']
-      let toFill = fields[randomNumber]
-      if (this.state[toFill] != 'free') {
-        return false
-      } else {
-        this.state[toFill] = machine.type
-        $('.item'+randomNumber).addClass(machine.type)
-        return true
-      }
-    },
-    this.resetState = () => {
-      this.state.fieldOne = 'free'
-      this.state.fieldTwo = 'free'
-      this.state.fieldThree = 'free'
-      this.state.fieldFour = 'free'
-      this.state.fieldFive = 'free'
-      this.state.fieldSix = 'free'
-      this.state.fieldSeven = 'free'
-      this.state.fieldEight = 'free'
-      this.state.fieldNine = 'free'
+  // for creating delay between steps
+  function sleep (ms) {
+    var currentTime = new Date().getTime();
+    while (currentTime + ms >= new Date().getTime()) {
+      //
     }
   }
   
-  $('.championShipsBtn').click(function() {
-    $('#championshipStats').toggle({effect:'fade'})
-    document.location.href = '#championshipStats'
-  })
+  /* args:
+   @pattern: string 'circle' or 'cross'
+  */
+  var Machine = function(pattern) {
+    this.pattern = pattern
+  }
   
-  let Machine1 = new Machine('cross'),
+  // constructor class for the tic-tac-toe board 
+  var Table = function() {
+    this.state = {
+      // value can be free, cross or circle
+      field0: 'free', 
+      field1: 'free', 
+      field2: 'free', 
+      field3: 'free', 
+      field4: 'free', 
+      field5: 'free', 
+      field6: 'free', 
+      field7: 'free', 
+      field8: 'free'
+    },
+
+    // the machine that starts out first
+    this.turn = 'Machine1',
+
+    // could have put all into one function; this breakdown is so that optimizing for performance will be easier later down the road
+    this.checkFirstRow = (pattern) => {
+      if (this.state['field0']== pattern && this.state['field1'] == pattern && this.state['field2'] == pattern) {
+        return true
+      } else {
+        return false
+      }
+    },
+    this.checkSecondRow = (pattern) => {
+      if (this.state['field3'] == pattern && this.state['field4'] == pattern && this.state['field5'] == pattern) {
+        return true
+      } else {
+        return false
+      }
+    },
+    this.checkLastRow = (pattern) => {
+      if (this.state['field6'] == pattern && this.state['field7'] == pattern && this.state['field8'] == pattern) {
+        return true
+      } else {
+        return false
+      }
+    },
+    this.checkFirstColumn = (pattern) => {
+      if (this.state['field0'] == pattern && this.state['field3'] == pattern && this.state['field6'] == pattern) {
+        return true
+      } else {
+        return false
+      }
+    },
+    this.checkSecondColumn = (pattern) => {
+      if (this.state['field1'] == pattern && this.state['field4'] == pattern && this.state['field7'] == pattern) {
+        return true
+      } else {
+        return false
+      }
+    },
+    this.checkLastColumn = (pattern) => {
+      if (this.state['field2'] == pattern && this.state['field5'] == pattern && this.state['field8'] == pattern) {
+        return true
+      } else {
+        return false
+      }
+    },
+    this.checkDiagonalFromTopLeft = (pattern) => {
+      if (this.state['field0'] == pattern && this.state['field4'] == pattern && this.state['field8'] == pattern) {
+        return true
+      } else {
+        return false
+      }
+    },
+    this.checkDiagonalFromTopRight = (pattern) => {
+      if (this.state['field2'] == pattern && this.state['field4'] == pattern && this.state['field6'] == pattern) {
+        return true
+      } else {
+        return false
+      }
+    },
+
+
+    // check all conditions above in a single function
+    this.hasWon = (machine) => {
+      if (this.checkFirstRow(machine.pattern) == true) {
+        $('.field0').html('<div class="horizontalCross"></div>')
+        $('.field1').html('<div class="horizontalCross"></div>')
+        $('.field2').html('<div class="horizontalCross"></div>')
+        return true
+      }
+      if (this.checkSecondRow(machine.pattern) == true) {
+        $('.field3').html('<div class="horizontalCross"></div>')
+        $('.field4').html('<div class="horizontalCross"></div>')
+        $('.field5').html('<div class="horizontalCross"></div>')
+        return true
+      }
+      if (this.checkLastRow(machine.pattern) == true) {
+        $('.field6').html('<div class="horizontalCross"></div>')
+        $('.field7').html('<div class="horizontalCross"></div>')
+        $('.field8').html('<div class="horizontalCross"></div>')
+        return true
+      }
+      if (this.checkFirstColumn(machine.pattern) == true) {
+        $('.field0').html('<div class="verticalCross"></div>')
+        $('.field3').html('<div class="verticalCross"></div>')
+        $('.field6').html('<div class="verticalCross"></div>')
+        return true
+      }
+      if (this.checkSecondColumn(machine.pattern) == true) {
+        $('.field1').html('<div class="verticalCross"></div>')
+        $('.field4').html('<div class="verticalCross"></div>')
+        $('.field7').html('<div class="verticalCross"></div>')
+        return true
+      }
+      if (this.checkLastColumn(machine.pattern) == true) {
+        $('.field2').html('<div class="verticalCross"></div>')
+        $('.field5').html('<div class="verticalCross"></div>')
+        $('.field8').html('<div class="verticalCross"></div>')
+        return true
+      }
+      if (this.checkDiagonalFromTopLeft(machine.pattern) == true) {
+        $('.field0').html('<div class="topLeftDiagonalCross"></div>')
+        $('.field4').html('<div class="topLeftDiagonalCross"></div>')
+        $('.field8').html('<div class="topLeftDiagonalCross"></div>')
+        return true
+      }
+      if (this.checkDiagonalFromTopRight(machine.pattern) == true) {
+        $('.field2').html('<div class="topRightDiagonalCross"></div>')
+        $('.field4').html('<div class="topRightDiagonalCross"></div>')
+        $('.field6').html('<div class="topRightDiagonalCross"></div>')
+        return true
+      }
+      // no check was successful. there is no winner:
+      console.log(`No winner yet.`)
+      return false
+    },
+   
+
+    /* args:
+     @index: integer between 0 and 8
+     @machine: Machine object (Machine1 or Machine2) to make a move */
+    this.fill = (index, machine) => {
+      console.log(`Trying to fill in: field ${index}`)
+      // check if the field being accessed is empty
+      if ( (this.state['field'+index]) == 'free') {
+        // set the state of the field to the machine's pattern
+        this.state['field'+index] = machine.pattern
+        // updating UI
+        $('.field'+index).html('')
+        $('.field'+index).addClass(machine.pattern)
+        return true
+      } else {
+        // failure; field that was accessed was not empty  
+        return false
+      }
+    },
+
+    // if starting a new game
+    this.resetState = () => {
+      this.state.field0 = 'free'
+      this.state.field1 = 'free'
+      this.state.field2 = 'free'
+      this.state.field3 = 'free'
+      this.state.field4 = 'free'
+      this.state.field5 = 'free'
+      this.state.field6 = 'free'
+      this.state.field7 = 'free'
+      this.state.field8 = 'free'
+    }
+  }
+  
+  // user clicked on the START button:
+  $('#startNewBtn').click(function() {
+
+    // initialize objects and switches for the game
+    let Machine1 = new Machine('cross'),
       Machine2 = new Machine('circle'),
       Board = new Table(),
-      randomNumber = () => {
-        return Math.floor(Math.random() * 10)
-      },
-      winner = undefined,
-      filled = undefined,
-      gameRunning = true,
-      rounds = 0
 
-  // take 1 sec between turns
-  // in the fill method, show on frontend
-  $('#startNewBtn').click(function() {
+      randomNumber = () => {
+        return Math.floor((Math.random() * 9))
+      },
+
+      filled = false,
+      crossWon = 0,
+      circleWon = 0,
+      crossLost = 0,
+      circleLost = 0,
+
+      steps = 0,
+      crossSteps = 0,
+      circleSteps = 0,
+      gameRunning = true
+   
+    // main game loop
     while (gameRunning) {
-      if (rounds == 9) {
-        gameRunning = false
-        console.log(Board.state)
-      }
+      // have to set this everytime at the beggining of every round: it was set to true before in the do/while loop
+      filled = false
+      
+      // machine 1's turn:
       if (Board.turn == 'Machine1') {
+
+        // check round limit, if met break out of main game loop
+        if (steps == 10) {
+          break
+        }
+
+        crossSteps++
+        $('#crossMoves').html(crossSteps)
+
+        // fill in a field on tic-tac-toe board by pattern Cross
         do {
-          filled = Board.fill(randomNumber(), Machine1)
-        } while (filled != true)
-        // check if any combination has happened
-        if (Board.hasWon(Machine1.type)) {
-          winner = 'Machine 1'
-          console.log(winner)
-          break
-        }
-        rounds++
-        // pass turn to other machine
-        Board.turn = 'Machine2'
-      } else {
-        while (Board.fill(randomNumber(), Machine2)) {
-          // couldnt fill, try again
-          filled = Board.fill(randomNumber(), Machine2)
-          if (filled) {
-            break
+          // making Cross a much stronger opponent. reference: https://www.wikihow.com/Win-at-Tic-Tac-Toe 
+          // plays the first Cross in the corner
+          if (steps == 0) {
+            filled = Board.fill(6, Machine1)
+          } else {
+            filled = Board.fill(randomNumber(), Machine1)
           }
-        }
-        // check if any combination has happened
-        if (Board.hasWon(Machine2.type)) {
-          winner = 'Machine 2'
-          console.log(winner)
+        } while (filled != true)
+
+        // check for winner
+        if (Board.hasWon(Machine1)) {
+          Board.winner = Machine1.pattern
+          console.log(`${Board.winner} has won`)
+          crossWon++
+          circleLost++
+          $('#crossWon').html(crossWon)
+          $('#circleLost').html(circleLost)
+          // break out of game loop because game was finished
           break
         }
-        rounds++
-        // pass turn to other machine
+
+        // sleep for 10 ms, increment step counter for total, pass the turn
+        sleep(10)
+        steps++
+        Board.turn = 'Machine2'
+
+      } else {
+        // check round limit, if met, break out of game loop
+        if (steps == 10) {
+          break
+        }
+        
+        // increment counter for circle steps and update on front-end
+        circleSteps++
+        $('#circleMoves').html(circleSteps)
+
+        // fill in a field on the tic-tac-toe board with pattern of Machine 2 (e.g. circle)
+        do {
+          filled = Board.fill(randomNumber(), Machine2)
+        } while (filled != true)
+
+        // check for a potential winner
+        if (Board.hasWon(Machine2)) {
+          Board.winner = Machine2.pattern
+          $('#messages').html(`The game has ended. ${Board.winner} has won. Please refresh the page to run a new game.`)
+          crossLost++
+          circleWon++
+          $('#circleWon').html(circleWon)
+          $('#crossLost').html(crossLost)
+          // break out of main game loop because game was finished
+          break
+        }
+
+        // wait for 100 milliseconds before continuing with next step
+        sleep(100)
+        // increment counter of steps
+        steps++
+        // give pass to other machine
         Board.turn = 'Machine1'
       }
     }
-    console.log('asd')
   })
+  
+  $('.championShipsBtn').click(function() {
+    $('#championships').toggle({effect:'fade'})
+    document.location.href = '#championships'
+  })
+  
 })
-

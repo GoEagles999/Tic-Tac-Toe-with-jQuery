@@ -13,40 +13,39 @@
   <link rel='stylesheet' type='text/css' href='style.css'>
 </head>
 <body>
-  <h1>Tic Tac Toe</h1>
-  <h4 id='welcome'>Pick a field to start</h2>
-  <div class='messages'></div>
+  <h1>Cross vs. Circle</h1>
+  <div id='messages'>Current setting: Cross always puts his first move in the corner, significantly increasing his chances of winning.</div>
   <div class='turn'></div>
   <table>
     <tr>
-      <td class='item1'></td>
-      <td class='item2'></td>
-      <td class='item3'></td>
+      <td class='field0 field'></td>
+      <td class='field1 field'></td>
+      <td class='field2 field'></td>
     </tr>
     <tr>
-      <td class='item4'></td>
-      <td class='item5'></td>
-      <td class='item6'></td>
+      <td class='field3 field'></td>
+      <td class='field4 field'></td>
+      <td class='field5 field'></td>
     </tr>
     <tr>
-      <td class='item7'></td>
-      <td class='item8'></td>
-      <td class='item9'></td>
+      <td class='field6 field'></td>
+      <td class='field7 field'></td>
+      <td class='field8 field'></td>
     </tr>
   </table>
-  <h2>Current Game Stats:</h2>
+  <h3>Game Statistics:</h3>
   <div id='gameStats'>
-    <div class='statDesc'>Number of moves by <strong>Machine 1</strong>: 
-      <div id='playerMoves' class='stat'>0</div>
+    <div class='computerMoves'>Number of moves by <strong>Cross</strong>: 
+      <div id='crossMoves' class='moves'>0</div>
     </div>
-    <div class='statDesc'>Number of moves by <strong>Machine 2</strong>: 
-      <div id='machineMoves' class='stat'>0</div>
+    <div class='computerMoves'>Number of moves by <strong>Circle</strong>: 
+      <div id='circleMoves' class='moves'>0</div>
     </div>
   <br>
-  <input style='margin-bottom:20px;' id='startNewBtn' type='button' value='Run New Game' />
+  <input style='margin-bottom:20px;' id='startNewBtn' type='button' value='Start' />
   <br>
-  <input style='margin-bottom:20px;' class='championShipsBtn' type='button' value='View Championship Stats' />
-  <div id='championshipStats'>
+  <input style='margin-bottom:20px;' class='championShipsBtn' type='button' value='Championship Statistics' />
+  <div id='championships'>
     <table>
       <tr>
         <th class='champHeader'>Player</th>
@@ -55,16 +54,16 @@
         <th class='champHeader'>Draw</th>
       </tr>
       <tr>
-        <td class='champData'>You</td>
-        <td id='userWon' class='champData'>0</td>
-        <td id='userLost' class='champData'>0</td>
-        <td id='userDraw' class='champData'>0</td>
+        <td class='champData'>Cross</td>
+        <td id='crossWon' class='champData'>0</td>
+        <td id='crossLost' class='champData'>0</td>
+        <td id='crossDraw' class='champData'>0</td>
       </tr>
       <tr>
-        <td class='champData'>Machine</td>
-        <td id='machineWon' class='champData'>0</td>
-        <td id='machineLost' class='champData'>0</td>
-        <td id='machineDraw' class='champData'>0</td>
+        <td class='champData'>Circle</td>
+        <td id='circleWon' class='champData'>0</td>
+        <td id='circleLost' class='champData'>0</td>
+        <td id='circleDraw' class='champData'>0</td>
       </tr>
     </table>
   </div>

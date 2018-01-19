@@ -1,75 +1,35 @@
 body {
   font-family: "Roboto", Arial, sans-serif;
   margin: 0 auto;
-  text-align: center;
   margin-top: 50px;
   color: #fff;
-  text-shadow: -1px -1px #333;
   background: #333;
+  text-shadow: -1px -1px #333;
+  text-align: center;
+}
+
+.horizontalCross {
+  width: 100px;
+  height: 2px;
+  opacity: 0.2;
+  margin-top: -13px;
+  background-color: white;
 }
 
 h1 {
   font-weight: normal;
 }
 
-.turn {
-  margin-bottom: 10px;
-}
-
-.statDesc {
-  float:left;
-  margin:10px;
-  width:300px;
-}
-
-.stat {
-  float:right;
-}
-
-.messages {
- color:lightblue;
- margin-bottom:10px;
-}
-
-.champHeader {
-  padding:10px;
-}
-
-.champData {
-  font-size:0.8rem;
-}
-
-#timeElapsedBox {
-  width:160px;
-}
-
-#timeElapsedText {
-  float:left;
-}
-
-#timeElapsed {
-  float:right;
-}
-
-#gameStats {
-  padding:2px;
-  border-radius:5px;
-  text-align:left;
-  border: 1px solid black;
-  width:350px;
-  height:80px;
-  margin: 15px auto;
-}
-
-#championshipStats {
-  display: none;
-  margin-bottom:30px;
+h3 {
+  margin-top: 30px;
+  font-weight: normal;
 }
 
 table {
+  width: 300px;
+  height: 300px;
+  margin: 15px auto;
   border-collapse: collapse;
-  width: 150px;
-  margin: 0 auto;
 }
 
 td {
@@ -77,8 +37,11 @@ td {
   height: 50px;
   border: 1px solid #555;
   cursor: pointer;
-  text-align:center;
-  font-size:1.3em;
+  text-align: center;
+}
+
+input {
+  font-size:1.1em;
 }
 
 td:before {
@@ -96,38 +59,108 @@ td.circle:before {
   color: pink;
 }
 
-.championShipsBtn {
-  width:100%;
-  background: #555;
-  border: 1px solid #333;
-  padding: 20px;
-  color: #fff;
-  cursor: pointer;
-  font-family: "Roboto", Arial, sans-serif;
-  text-transform: uppercase;
+#gameStats {
+  width:350px;
+  height:80px;
+  padding:2px;
+  border: 1px solid white;
+  border-radius:10px;
+  text-align:left;
+  margin: 0 auto;
+}
+
+#championshipStats {
+  display: none;
+  margin-bottom:100px;
 }
 
 #startNewBtn {
   width:100%;
-  background: #555;
+  padding: 25px;
   margin-top:30px;
   border: 1px solid #333;
-  padding: 20px;
-  color: #fff;
-  cursor: pointer;
+  border-radius:10px;
+  font-weight: bold;
   font-family: "Roboto", Arial, sans-serif;
   text-transform: uppercase;
+  background: #555;
+  color:white;
+  cursor: pointer;
 }
 
-
 #startNewBtn:hover {
-  opacity: 0.8;
+  background-color:white;
+  color: black;
+}
+
+#messages {
+ color: lightblue;
+ margin-bottom: 20px;
+ margin-top: -10px;
+}
+
+.computerMoves {
+  float: left;
+  margin: 10px;
+  width: 300px;
+}
+
+.moves {
+  float: right;
+}
+
+.champHeader {
+  height: 5%;
+  padding: 0px 10px;
+  border: 1px solid white;
+  font-size: 1.2em;
+}
+.championShipsBtn {
+  width: 100%;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 25px;
+  font-family: "Roboto", Arial, sans-serif;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: bold;
+  background: #555;
+  color: white;
 }
 
 .championShipsBtn:hover {
-  opacity: 0.8;
+  color: black;
+  background-color: white;
 }
 
-input {
-  font-size:1.1em;
+/* needs a bit of fixing as line is out of place on UI*/
+.verticalCross {
+  width: 2px;
+  opacity: 0.2;
+  margin-left: 45px;
+  margin-top: -23px;
+  background-color: white;
 }
+
+/* needs a bit of fixing as line is out of place on UI*/
+.topRightDiagonalCross {
+  width: 2px;
+  height: 120px;
+  transform: rotate(45deg);
+  opacity: 0.2;
+  margin-top: -42px;
+  margin-left: 54px;
+  background-color: white;
+}
+
+/* needs a bit of fixing as line is out of place on UI*/
+.topLeftDiagonalCross {
+  width: 2px;
+  height: 112px;
+  transform: rotate(-45deg);
+  opacity: 0.2;
+  margin-left: 39px;
+  margin-top: -40px;
+  background-color: white;
+}
+
